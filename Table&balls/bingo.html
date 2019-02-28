@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bingo Game!!!</title>
+	</head>
+		<script>
+			function numberGenerator() {
+				var n = new Array(25);
+				var nums = new Array(25);
+				for (let i = 0; i < nums.length; i++) {
+					var randomNumber = Math.floor(Math.random()*70);
+					for (let j = 0; j < n.length; j++) {
+						if (n[j] == randomNumber) 
+							randomNumber = Math.floor(Math.random()*70);
+					}
+					n[i] = randomNumber;
+				}
+				// Output to the table
+				for (let k = 0; k < n.length; k++) {
+					document.getElementById("square" + k).innerHTML = n[k];
+				}
+				document.getElementById("square12").innerHTML = "Free Ball";
+			}
+		</script>
+
+<style>
+	table {
+	    margin: 10; 
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%) 
+	}
+	td {
+	    width: 150px;
+	    height: 150px;
+	}
+</style>
+	<body onload="numberGenerator()">
+		<table border = "2">
+			<tr>
+				<td id = "square0" align="center"></td>
+				<td id = "square1" align="center"></td>
+				<td id = "square2" align="center"></td>
+				<td id = "square3" align="center"></td>
+				<td id = "square4" align="center"></td>
+			</tr>
+			<tr>
+				<td id = "square5" align="center"></td>
+				<td id = "square6" align="center"></td>
+				<td id = "square7" align="center"></td>
+				<td id = "square8" align="center"></td>
+				<td id = "square9" align="center"></td>
+			</tr>
+			<tr>
+				<td id = "square10" align="center"></td>
+				<td id = "square11" align="center"></td>
+				<td id = "square12" align="center"></td>
+				<td id = "square13" align="center"></td>
+				<td id = "square14" align="center"></td>
+			</tr>
+			<tr>
+				<td id = "square15" align="center"></td>
+				<td id = "square16" align="center"></td>
+				<td id = "square17" align="center"></td>
+				<td id = "square18" align="center"></td>
+				<td id = "square19" align="center"></td>
+			</tr>
+			<tr>
+				<td id = "square20" align="center"></td>
+				<td id = "square21" align="center"></td>
+				<td id = "square22" align="center"></td>
+				<td id = "square23" align="center"></td>
+				<td id = "square24" align="center"></td>
+			</tr>
+		</table>
+	</body>
+</html>
