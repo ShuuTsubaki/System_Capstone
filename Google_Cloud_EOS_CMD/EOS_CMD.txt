@@ -1,0 +1,42 @@
+
+Before you do any thing, you need to know the EOSIO thing is running
+	with in a app called screen, if you need to check statue or restart
+	the EOS, type in the following CMD:
+	
+	$ screen -r
+	
+	*When you done with the EOS thing, do the following things to detach
+		with the screen:
+	
+	Ctrl+A, and then, Ctrl+D
+
+
+
+Set up everything that EOSIO need:
+
+	$keosd &
+	$nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::chain_api_plugin --plugin eosio::http_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --access-control-allow-origin='*' --contracts-console --http-validate-host=false --verbose-http-errors --filter-on='*' >> nodeos.log 2>&1 &
+
+	*You can run the following CMD to check is it running correctly:
+	
+	$tail -f nodeos.log
+
+	
+	*if there is an error occur (most likely caused by nodeos crush),
+		you can run the following conmand to restart nodeos:
+		
+		$nodeos --hard-replay --replay-blockchain
+	
+		*when it done with checking the log, you can ctrl+c, then run the nodeos again:
+	
+		$nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::chain_api_plugin --plugin eosio::http_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --access-control-allow-origin='*' --contracts-console --http-validate-host=false --verbose-http-errors --filter-on='*' >> nodeos.log 2>&1 &
+
+	
+	*if it shows any others error, call me, I will restart it for you. 
+		
+		
+If you want to stop nodeos and keosd do the following:
+	
+	$pkill nodeos
+	$pkill keosd
+		
