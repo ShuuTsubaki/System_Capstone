@@ -1,0 +1,102 @@
+Open wallet:
+	$cloes wallet open
+	
+	
+	
+	
+Unlock wallet:
+	$cleos wallet unlock
+
+	
+	
+	
+Defult wallet key:
+	private: PW5JmPeFwMaWkR8YUU6rBvrXBEZmjtyiXvRz1ngzcTqZhDFv5GG3p
+	public: EOS7VJJ7s8MEbuzvcS3VURcexvnXp5ADG9SvGMCxuPwdiyyPkjFWW
+	
+	
+	
+	
+Create account:
+	$cleos create account eosio $User_name $Private_key
+	
+	*Example: cleos create account eosio bingo EOS7VJJ7s8MEbuzvcS3VURcexvnXp5ADG9SvGMCxuPwdiyyPkjFWW 
+
+
+	
+Get an account info:
+	$cleos get account $User_name
+	
+	*Example: cleos get account bingo
+	
+	
+	
+Get accounts info:
+	$cleos get accounts $key
+	
+	
+	
+Compile you own c++ (contract) file:
+	$eosio-cpp -o $File_name.wasm $File_name.cpp --abigen --contract $File_naem
+	
+	*Example,   if I have a c++ file named:  "bingo.cpp"
+		$eosio-cpp -o bingo.wasm bingo.cpp --abigen --contract bingo
+
+	
+	
+Set your contract to EOSIO:
+	$cleos set contract $File_name ./$File_name --permission $User_name@active
+	
+	*in our case, the user name is bingo
+	*Example: cleos set contract bingo ~/sys_test/bingo --permission bingo@active
+
+	
+
+	
+Push an action to test it:
+	$cleos push action $Contract_name $Function_name '[$Required_input]' -p $User_name@active
+
+	*Example: cleos push action helloworld hi '["helloworld"]' -p helloworld@active
+
+	
+
+	
+Our Contract CMD:
+
+Example:
+$User_Name: careyuyu
+
+Login: 
+玩家要进入游戏时使用
+$User_Name = 玩家注册时的名字
+$Seed = 玩家输入的 seed
+cleos push action bingo login '["$User_Name", "$Seed"]' -p $User_Name@active
+
+Enter game：
+当两个玩家到期后， 每个玩家使用一次， 会生成bingo的游戏盘 和 5个球
+$User_Name = 玩家注册时的名字
+$Seed = 玩家输入的 seed
+cleos push action bingo entergame '["$User_Name", "$Seed"]' -p $User_Name@active
+
+Genball：
+进入游戏后，使用这个指令去 一个一个 生成 球
+$User_Name = 玩家注册时的名字
+$Seed = 玩家输入的 seed
+cleos push action bingo genball '["$User_Name", "$Seed"]' -p $User_Name@active
+
+Declearwin：
+cleos push action bingo Declearwin '["$User_Name"]' -p $User_Name@active
+
+
+Logout:
+Logout 玩家用的， 酌情使用
+cleos push action bingo logout '["$User_Name"]' -p $User_Name@active
+
+
+Erase：
+这个是固定格式
+清空table
+cleos push action bingo erase '['bingo']' -p bingo@active
+
+	
+	
