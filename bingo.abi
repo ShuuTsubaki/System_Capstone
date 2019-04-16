@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Sun Mar 17 00:07:31 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Tue Apr 16 16:22:57 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -19,10 +19,6 @@
                 {
                     "name": "username",
                     "type": "name"
-                },
-                {
-                    "name": "b_seed",
-                    "type": "string"
                 }
             ]
         },
@@ -43,10 +39,6 @@
                 {
                     "name": "username",
                     "type": "name"
-                },
-                {
-                    "name": "b_seed",
-                    "type": "string"
                 }
             ]
         },
@@ -101,6 +93,10 @@
                     "type": "uint16"
                 },
                 {
+                    "name": "prev_game",
+                    "type": "int8"
+                },
+                {
                     "name": "game_id",
                     "type": "uint64"
                 },
@@ -126,7 +122,7 @@
                 },
                 {
                     "name": "block_seed",
-                    "type": "string"
+                    "type": "checksum256"
                 }
             ]
         },
