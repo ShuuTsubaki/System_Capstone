@@ -9,7 +9,7 @@ using namespace eosio;
 class [[eosio::contract]] bingo : public eosio::contract
 {
     private:
-        // struct that store the players information
+        
         struct [[eosio::table]] player
         {
             name        username;
@@ -25,13 +25,11 @@ class [[eosio::contract]] bingo : public eosio::contract
             std::vector<int8_t> balls;//[GAME_SIZE * 2];
             int8_t iteration;
             std::string block_seed;
-            // getter function use the first field in the struct 
-			// and will be used by the compiler to add the primary key.
+            
             uint64_t primary_key() const { return username.value; }
             uint64_t get_secondary_1() const { return game_id; }
         };
-		//a type that refers to a multi index table and called players
-		//its type is players_table
+
         typedef eosio::multi_index<"players"_n, player, 
             indexed_by<"bygid"_n, const_mem_fun<player, uint64_t, &player::get_secondary_1>>
         > players_table;
@@ -46,7 +44,7 @@ class [[eosio::contract]] bingo : public eosio::contract
         };
 
         typedef eosio::multi_index<"record"_n, record> record_table;
-        //create the variable for the table
+        
         players_table _players;
         record_table _record;
         
@@ -63,18 +61,13 @@ class [[eosio::contract]] bingo : public eosio::contract
 
     public:
         using contract::contract;
-		//initialize the variable in the smart contract constructor 
-        // _players( , ) provides code and scope 
-		// name "record" in the typedef provides tablename
-		// primary_key provides primary key
-		bingo(name username, name code, datastream<const char*> ds ):contract(username, code, ds), _players(username, username.value), _record(_self, _self.value){}
-        //lines verify this action is being called by correct user
-		//
+
+        bingo(name username, name code, datastream<const char*> ds ):contract(username, code, ds), _players(username, username.value), _record(_self, _self.value){}
+        
         //call this ONCE and wait until in_game become true
         [[eosio::action]]
         void login(name username, std::string seed)
         {
-			// Ensure this action is authorized by the player
             require_auth(username);
             auto itr = _record.begin();
             if (itr == _record.end())
@@ -90,7 +83,6 @@ class [[eosio::contract]] bingo : public eosio::contract
                 );
                 itr = _record.begin();
             }
-			// Create a record in the table if the player doesn't exist in our app yet
             auto user_iterator = _players.find(username.value);
             if (user_iterator == _players.end())
             {
@@ -446,5 +438,5 @@ class [[eosio::contract]] bingo : public eosio::contract
 
     }
 };
-// The auto-generated toool provided by eosio can not be use 
+
 EOSIO_DISPATCH( bingo, (login)(logout)(entergame)(genball)(declearwin)(hi)(erase))
