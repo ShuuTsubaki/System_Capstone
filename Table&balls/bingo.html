@@ -4,13 +4,16 @@
 	<title>Bingo Game!!!</title>
 	<!-- <meta http-equiv="refresh" content="2" > -->
 	<link rel="stylesheet" type="text/css" href="css/table.css" />
-	<!-- <link rel="stylesheet" type="text/css" href="css/ball.css" /> -->
 	<link rel="stylesheet" type="text/css" href="css/ballsOnTable.css" />
+	<link rel="stylesheet" type="text/css" href="css/movingBall.css" />
 </head>
 <script type="text/javascript" src="js/bingo.js"></script>
+<script type="text/javascript" src="js/getBall.js"></script>
 
-<body onload="numberGenerator()" background="background.jpg">
-	<table border="10" id="t">
+<body onload="numberGenerator();getNum(15);" background="background.jpg">
+	<!-- <div class="circle" style="z-index: 10;"><div id="mb"></div></div> -->
+	<audio autoplay ><source src="http://www.mikefromchurch.com/ringtones/RINGTONES-wav/Treo%20-Arabesque.wav" type="audio/wav"></audio>
+	<table border="10" class="table1">
 		<tr>
 			<td>
 				<div class="balls">
@@ -152,6 +155,61 @@
 			</td>
 		</tr>
 	</table>
-
+	<table border="10" class="table2" >
+		<tr>
+			<td>
+				<div class="balls2">
+					<div id="num1"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num2"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num3"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num4"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num5"></div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="balls2">
+					<div id="num6"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num7"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num8"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num9"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num10"></div>
+				</div>
+			</td>
+		</tr>
+	</table>
 </body>
 </html>
