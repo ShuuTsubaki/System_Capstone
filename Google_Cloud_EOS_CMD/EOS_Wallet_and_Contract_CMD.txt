@@ -76,13 +76,13 @@ Enter game：
 当两个玩家到期后， 每个玩家使用一次， 会生成bingo的游戏盘 和 5个球
 $User_Name = 玩家注册时的名字
 $Seed = 玩家输入的 seed
-cleos push action bingo entergame '["$User_Name", "$Seed"]' -p $User_Name@active
+cleos push action bingo entergame '["$User_Name"]' -p $User_Name@active
 
 Genball：
 进入游戏后，使用这个指令去 一个一个 生成 球
 $User_Name = 玩家注册时的名字
 $Seed = 玩家输入的 seed
-cleos push action bingo genball '["$User_Name", "$Seed"]' -p $User_Name@active
+cleos push action bingo genball '["$User_Name"]' -p $User_Name@active
 
 Declearwin：
 cleos push action bingo declearwin '["$User_Name"]' -p $User_Name@active
