@@ -85,7 +85,7 @@ $Seed = 玩家输入的 seed
 cleos push action bingo genball '["$User_Name", "$Seed"]' -p $User_Name@active
 
 Declearwin：
-cleos push action bingo Declearwin '["$User_Name"]' -p $User_Name@active
+cleos push action bingo declearwin '["$User_Name"]' -p $User_Name@active
 
 
 Logout:
