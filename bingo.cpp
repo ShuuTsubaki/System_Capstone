@@ -268,8 +268,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                                     player.block_seed = itr->block_seed;
                                     break;
                                 }
-                                if (itr->in_game)
-                                    all_seed = all_seed + itr->seed;
+                                all_seed = all_seed + itr->seed;
                                 itr++;
                             }
                             if (s_flag) //first 5 generation
