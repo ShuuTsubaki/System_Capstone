@@ -98,5 +98,8 @@ Erase：
 清空table
 cleos push action bingo erase '['bingo']' -p bingo@active
 
+Get Table:
+cleos get table bingo bingo players
+
 	
 	
