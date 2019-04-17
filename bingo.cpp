@@ -393,12 +393,12 @@ class [[eosio::contract]] bingo : public eosio::contract
                         for (i = 0; i < GAME_SIZE; i++)
                         {
                             r = c = 1;
-                            d &= player.board[i * GAME_SIZE + i];
-                            e &= player.board[(i + 1) * GAME_SIZE - i - 1];
+                            d &= t[i * GAME_SIZE + i];
+                            e &= t[(i + 1) * GAME_SIZE - i - 1];
                             for (j = 0; j < GAME_SIZE; j++)
                             {
-                                r &= player.board[i * GAME_SIZE + j];
-                                c &= player.board[j * GAME_SIZE + i];
+                                r &= t[i * GAME_SIZE + j];
+                                c &= t[j * GAME_SIZE + i];
                             }
                             w |= r | c; // row & column
                         }
