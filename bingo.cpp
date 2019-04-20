@@ -1,80 +1,125 @@
+/*
+
+    A simple contract implementation of game Bingo on EOS blockchain.
+
+    This contract handles initialization of contract, user login, user logout, gameplay,
+        and verification of wining player. Only one user can won in each game
+    This contract provides 6 actions:
+        login:
+            User login to start a game, which a seed string is required for random number generation.
+            User is ready to game after this action.
+        logout:
+            User logout from game. Will reverse "user is ready for game" state caused by login before a game starts.
+            Also makes the user lose if game already started.
+            A button for manual logout should be provided. 
+            Server should also automatically logout player after inactivity.
+        entergame:
+            Server suppose to call this action after global game_id is incremented, user game_id is smaller than global
+            to start game.
+            which means we have PLAYER_COUNT number of player ready for a new game.
+            A valid board is generated after game start.
+        genball: (Description for GAME_SIZE == 5)
+            Server suppose to call this action in fixed time intervals until game end (in_game == false).
+            First call will generate 5 balls at once, no duplication.
+            Second to Sixth call will generate one ball per call, no dupliction with 6-10 balls but can duplicate with first 5.
+            Seventh call will cause user to logout, i.e. lose, game end.
+        declearwin:
+            This action should be triggered by user when the user believe that he/she is winning.
+            The contract will then verify if won and change the variables accordingly.
+            One player win will cause all other players in the same game lose.
+            Calling this action will cause the player to lose if not winning.
+        erase:
+            Reset game and all tables. Action for testing purpose
+
+    By Yuqing Liu
+    CS4284, Virginia Tech 
+    Apr 2019
+*/
+
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/crypto.h>
 #include <eosiolib/transaction.h>
 
 using namespace std;
 using namespace eosio;
-#define GAME_SIZE 5 //larger size will cause issue
-#define PLAYER_COUNT 2
+#define GAME_SIZE 5         // Will generate GAME_SIZE*GAME_SIZE table and GMAE_SIZE*2 balls. larger size will cause issue for now
+#define PLAYER_COUNT 2      // number of players in one game, can be any number
 
 class [[eosio::contract]] bingo : public eosio::contract
 {
     private:
         
-        struct [[eosio::table]] player
+        struct [[eosio::table]] player  // structure to hold game and player data for each player
         {
-            name        username;
-            uint16_t    win_count;
-            uint16_t    lost_count;
-            int8_t      prev_game;
+            name        username;       // name of player
+            uint16_t    win_count;      // times a player won
+            uint16_t    lost_count;     // times a player lose
+            int8_t      prev_game;      // if a player won/lose the previous game. 1:won, 0:lost, -1:invalid
             
-            uint64_t    game_id;
-            bool        in_game;
-            std::string seed;
+            uint64_t    game_id;        // a number indication which game a player is in. Used to locate other players in same game
+            bool        in_game;        // ture: player is in game, false: player is not in game/game ended
+            std::string seed;           // user input used for random generation
 
             //most recent game record
-            std::vector<int8_t> board;//[GAME_SIZE * GAME_SIZE];
-            std::vector<int8_t> balls;//[GAME_SIZE * 2];
-            int8_t iteration;
-            capi_checksum256 block_seed;
+            std::vector<int8_t> board;  // Bingo game table [GAME_SIZE * GAME_SIZE];
+            std::vector<int8_t> balls;  // Bingp game balls [GAME_SIZE * 2];
+            int8_t iteration;           // indicates ball generation state
             
-            uint64_t primary_key() const { return username.value; }
-            uint64_t get_secondary_1() const { return game_id; }
+            uint64_t primary_key() const { return username.value; }     //Primary key cannot be changed, use name
+            uint64_t get_secondary_1() const { return game_id; }        //Secondary key can be changed, good for finding players in same game
         };
 
         typedef eosio::multi_index<"players"_n, player, 
             indexed_by<"bygid"_n, const_mem_fun<player, uint64_t, &player::get_secondary_1>>
         > players_table;
         
-        struct [[eosio::table]] record
+        struct [[eosio::table]] record  // Work-around to store contract state
         {
-            name        contract;
-            uint64_t    game_id;
-            int8_t      cur_group_count;
+            name        contract;       // name of contract, primary key
+            uint64_t    game_id;        // Current ID of game that is awaiting players
+            int8_t      cur_group_count;// Counut of awaiting players
 
             uint64_t primary_key() const { return contract.value; }
         };
 
         typedef eosio::multi_index<"record"_n, record> record_table;
         
-        players_table _players;
-        record_table _record;
+        players_table _players;         // Table for player data
+        record_table _record;           // Table for contract state
 
     public:
         using contract::contract;
 
         bingo(name username, name code, datastream<const char*> ds ):contract(username, code, ds), _players(username, username.value), _record(_self, _self.value){}
         
-        //call this ONCE and wait until in_game become true
+        /*
+         *  This action will initialize contract (if not initialized) and add user to player table (if not already in there)
+         *  User is ready to game after this action.
+         *  When a group has enough people, the group number is incremented, whereas the previous group is "detached" for game
+         *  @param  seed
+         *      User input seed string for random number generation
+         */ 
         [[eosio::action]]
         void login(name username, std::string seed)
         {
             require_auth(username);
             auto itr = _record.begin();
+            // If no record is in _record, initialize contract
             if (itr == _record.end())
             {
                 itr = _record.emplace
                 (
-                    _self, [&](auto& nr)
+                    _self, [&](auto& newrecord)
                     {
-                        nr.contract = _self;
-                        nr.cur_group_count = 0;
-                        nr.game_id = 0;
+                        newrecord.contract = _self;
+                        newrecord.cur_group_count = 0;
+                        newrecord.game_id = 0;
                     }
                 );
                 itr = _record.begin();
             }
             auto user_iterator = _players.find(username.value);
+            //If player doesn't exist in _player, add to table
             if (user_iterator == _players.end())
             {
                 user_iterator = _players.emplace
@@ -98,6 +143,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                     }
                 );
             }
+            // Modify table entry such that player is waiting for game
             else
             {
                 _players.modify
@@ -110,6 +156,8 @@ class [[eosio::contract]] bingo : public eosio::contract
                     }
                 );
             }
+            // Modify table entry to incremenet group count
+            //if we have enough people, increment game id to "detach" the group
             _record.modify
             (
                 itr, _self, [&](auto& r)
@@ -126,7 +174,12 @@ class [[eosio::contract]] bingo : public eosio::contract
             );
         }
 
-        //call this when user inactive
+        /*
+         *  This action will logout user.
+         *  If user is waiting for game to start, decrement group count
+         *  If user is already in game, the user lose the game
+         *  User is not in game after this action
+         */ 
         [[eosio::action]]
         void logout(name username)
         {
@@ -139,11 +192,15 @@ class [[eosio::contract]] bingo : public eosio::contract
             (
                 iterator, username, [&](auto& player)
                 {
+                    player.iteration = -3;
+                    //Make user lose
                     if (player.in_game)
                     {
                         player.lost_count = player.lost_count + 1;
                         player.prev_game = 0;
+                        player.iteration = -2;
                     }
+                    //decrement group count
                     else if (player.game_id == itr->game_id && itr->cur_group_count != 0)
                         _record.modify
                         (
@@ -153,13 +210,16 @@ class [[eosio::contract]] bingo : public eosio::contract
                             }
                         );
                     player.in_game = false;
-                    player.iteration = -2;
                 }
             );
         }
 
-        //call this REPEATEDLY until in_game is true
-        //table will be generated
+        /*
+         *  After global game id is incremented, this actions should be called to start a game
+         *  A game board will be generated using the transaction and the user input seed
+         *  After this action call the in_game variable is true, plahyer is in game.
+         *  A gen_ball call should follow this to generate first 5 balls.
+         */
         [[eosio::action]]
         void entergame(name username)
         {
@@ -174,8 +234,10 @@ class [[eosio::contract]] bingo : public eosio::contract
             (
                 iterator, username, [&](auto& player)
                 {
+                    // User in game
                     player.in_game = true;
                     player.iteration = 0;
+                    // Random using transaction info, user seed, and hash
                     auto size = transaction_size();
                     char* buf = new char[size + strlen(player.seed.c_str())];
                     uint32_t read = read_transaction(buf, size);
@@ -183,6 +245,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                     capi_checksum256 hash;
                     sha256(buf, read + strlen(player.seed.c_str()), &hash);
                     delete [] buf;
+                    //Generate the board
                     int8_t* t = new int8_t[GAME_SIZE * GAME_SIZE];
                     int8_t i, k = 0;
                     for (i = 0; i < GAME_SIZE * GAME_SIZE; i++)
@@ -205,15 +268,18 @@ class [[eosio::contract]] bingo : public eosio::contract
                         t[k] = -1;
                     }
                     delete [] t;
+                    // clear ball
                     for (i = 0; i < GAME_SIZE * 2; i++)
                         player.balls[i] = -1;
                 }
             );
         }
 
-        //call this periodically T > 4 seconds
-        //For total of GAME_SIZE + 1 times
-        //the last time is to end game
+        /*
+         *  First call will generate first GAME_SIZE balls, no duplicates
+         *  Next GAME_SIZE calls generates one ball each, no duplicates with later balls but can duplicate balls with first call
+         *  One extra call will cause the user to logout
+         */
         [[eosio::action]]
         void genball(name username)
         {
@@ -223,6 +289,7 @@ class [[eosio::contract]] bingo : public eosio::contract
             auto iterator = _players.find(username.value);
             eosio_assert(iterator != _players.end(), "Player does not exist");
             eosio_assert(iterator->in_game, "Player not in game!");
+            //No ball to generate, logout
             if (iterator->iteration > GAME_SIZE)
             {
                 logout(username);
@@ -235,51 +302,43 @@ class [[eosio::contract]] bingo : public eosio::contract
                     bool end_flag = true;
                     auto ptable = _players.get_index<"bygid"_n>();
                     auto itr = ptable.lower_bound(player.game_id);
+                    std::string all_seed = "";
+                    bool s_flag = true;
                     while (itr != ptable.end())
                     {
                         if (itr->game_id != player.game_id)
                             break;
-                        if (itr->iteration == -1)
+                        if (itr->iteration == -1)               //someone won
                         {
                             end_flag = false;
                             break;
                         }
+                        if (itr->iteration > player.iteration)  //sync balls with other players
+                        {
+                            s_flag = false;
+                            int i;
+                            for (i = 0; itr->balls[i] >= 0 && i < GAME_SIZE * 2; i++)
+                                player.balls[i] = itr->balls[i];
+                            player.iteration = itr->iteration;
+                            break;
+                        }
+                        if (itr->iteration != -3)
+                            all_seed = all_seed + itr->seed;
                         itr++;
                     }
-                    if (end_flag)
+                    if (end_flag)   //If no one end yet
                     {
-                        if (player.iteration == 0) //generate seed and first 5 balls
+                        if (s_flag) //first 5 generation
                         {
-                            auto ptable = _players.get_index<"bygid"_n>();
-                            auto itr = ptable.lower_bound(player.game_id);
-                            std::string all_seed = "";
-                            bool s_flag = true;
-                            while (itr != ptable.end())
+                            player.iteration = player.iteration + 1;
+                            capi_checksum256 h;
+                            int8_t* t = new int8_t[GAME_SIZE * GAME_SIZE];
+                            int i;
+                            for (i = 0; i < GAME_SIZE * GAME_SIZE; i++)
+                                t[i] = i;
+                            if (player.iteration == 0) //first 5 balls
                             {
-                                if (itr->game_id != player.game_id)
-                                    break;
-                                if (itr->iteration > player.iteration)
-                                {
-                                    s_flag = false;
-                                    int i;
-                                    for (i = 0; itr->balls[i] >= 0 && i < GAME_SIZE * 2; i++)
-                                        player.balls[i] = itr->balls[i];
-                                    player.iteration = itr->iteration;
-                                    player.block_seed = itr->block_seed;
-                                    break;
-                                }
-                                all_seed = all_seed + itr->seed;
-                                itr++;
-                            }
-                            if (s_flag) //first 5 generation
-                            {
-                                player.iteration = player.iteration + 1;
-                                capi_checksum256 h;
                                 sha256(all_seed.c_str(), strlen(all_seed.c_str()), &h);
-                                int8_t* t = new int8_t[GAME_SIZE * GAME_SIZE];
-                                int i;
-                                for (i = 0; i < GAME_SIZE * GAME_SIZE; i++)
-                                    t[i] = i;
                                 int k = 0;
                                 for (i = 0; i < GAME_SIZE; i++)
                                 {
@@ -299,49 +358,42 @@ class [[eosio::contract]] bingo : public eosio::contract
                                     player.balls[i] = t[k];
                                     t[k] = -1;
                                 }
-                                delete [] t;
-
+                            }
+                            else    // later one-each-call ball generation
+                            {
                                 auto size = transaction_size();
                                 char* buf = new char[size + strlen(all_seed.c_str())];
                                 uint32_t read = read_transaction(buf, size);
-                                strcpy(buf + read, player.seed.c_str());
-                                capi_checksum256 hash;
-                                sha256(buf, read + strlen(player.seed.c_str()), &hash);
-                                player.block_seed = hash;
-                            }
-                        }
-                        else
-                        {
-                            player.iteration = player.iteration + 1;
-                            int8_t* t = new int8_t[GAME_SIZE * GAME_SIZE];
-                            int8_t i, k = 0;
-                            for (i = 0; i < GAME_SIZE * GAME_SIZE; i++)
-                                t[i] = i;
-                            for (i = 0; i < GAME_SIZE; i++)
-                                if (player.balls[GAME_SIZE + i] >= 0)
-                                    t[player.balls[GAME_SIZE + i]] = -1;
-                                else
-                                    break;
-                            i = player.iteration - 1;
-                            uint32_t j = player.block_seed.hash[i * 4] << 24 | player.block_seed.hash[i * 4 + 1] << 16 | player.block_seed.hash[i * 4 + 2] << 8 | player.block_seed.hash[i * 4 + 3];
-                            j = j % (GAME_SIZE * GAME_SIZE - i - 1);
-                            while (1)
-                            {
-                                if (t[k] >= 0)
-                                {
-                                    j--;
-                                    if (j == -1)
+                                strcpy(buf + read, all_seed.c_str());
+                                sha256(buf, read + strlen(all_seed.c_str()), &h);
+                                delete [] buf;
+                                int8_t k = 0;
+                                for (i = 0; i < GAME_SIZE; i++)
+                                    if (player.balls[GAME_SIZE + i] >= 0)
+                                        t[player.balls[GAME_SIZE + i]] = -1;
+                                    else
                                         break;
+                                i = player.iteration - 1;
+                                uint32_t j = h.hash[i * 4] << 24 | h.hash[i * 4 + 1] << 16 | h.hash[i * 4 + 2] << 8 | h.hash[i * 4 + 3];
+                                j = j % (GAME_SIZE * GAME_SIZE - i - 1);
+                                while (1)
+                                {
+                                    if (t[k] >= 0)
+                                    {
+                                        j--;
+                                        if (j == -1)
+                                            break;
+                                    }
+                                    k++;
+                                    k = k % (GAME_SIZE * GAME_SIZE);
                                 }
-                                k++;
-                                k = k % (GAME_SIZE * GAME_SIZE);
+                                player.balls[GAME_SIZE + i - 1] = t[k];
+                                eosio_assert(i + 1 == player.iteration, "We have sanity problem?");
                             }
-                            player.balls[GAME_SIZE + i - 1] = t[k];
                             delete [] t;
-                            eosio_assert(i + 1 == player.iteration, "We have sanity problem?");
                         }
                     }
-                    else
+                    else    //Someone won, current user lost
                     {
                         player.iteration = -2;
                         player.lost_count = player.lost_count + 1;
@@ -352,6 +404,11 @@ class [[eosio::contract]] bingo : public eosio::contract
             );
         }
         
+        /*
+         *  This action should only be called if one user believe he/she is winning
+         *  This action will verify the winning state and increment win counter
+         *  Or the user loses immediatly
+         */
         [[eosio::action]]
         void declearwin(name username)
         {
@@ -380,6 +437,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                     }
                     if (end_flag)
                     {
+                        //check if winning
                         int8_t* t = new int8_t[GAME_SIZE * GAME_SIZE];
                         int8_t i, j, r, c, d, e, w = 0;
                         for (i = 0; i < GAME_SIZE * GAME_SIZE; i++)
@@ -403,6 +461,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                             w |= r | c; // row & column
                         }
                         w |= d | e; //diagnal
+                        delete [] t;
                         if (w == 1)
                         {
                             player.iteration = -1;
@@ -418,7 +477,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                             player.in_game = false;
                         }
                     }
-                    else
+                    else    //Someone else won, current user lose
                     {
                         player.iteration = -2;
                         player.lost_count = player.lost_count + 1;
@@ -427,37 +486,32 @@ class [[eosio::contract]] bingo : public eosio::contract
                     }
                 }
             );
-
         }
 
-    [[eosio::action]]
-    void hi( name user )
-    {
-        require_auth( user );
-        print( "Hello, ", name{user} );
-    }
-
-    [[eosio::action]]
-    void erase( name self )
-    {
-        require_auth( _self );
-        auto ritr = _record.begin();
-        eosio_assert(ritr != _record.end(), "Table does not exist");
-        auto itr = _players.begin();
-        while (itr != _players.end())
+        /*
+         *  Reset game by erasing player table
+         *  and reset contract record
+         */
+        [[eosio::action]]
+        void erase( name self )
         {
-            itr=_players.erase(itr);
-        }
-        _record.modify
-        (
-            ritr, _self, [&](auto& r)
+            require_auth( _self );
+            auto ritr = _record.begin();
+            eosio_assert(ritr != _record.end(), "Table does not exist");
+            auto itr = _players.begin();
+            while (itr != _players.end())
             {
-                r.game_id = 0;
-                r.cur_group_count = 0;
+                itr=_players.erase(itr);
             }
-        );
+            _record.modify
+            (
+                ritr, _self, [&](auto& r)
+                {
+                    r.game_id = 0;
+                    r.cur_group_count = 0;
+                }
+            );
+        }
+};  
 
-    }
-};
-
-EOSIO_DISPATCH( bingo, (login)(logout)(entergame)(genball)(declearwin)(hi)(erase))
+EOSIO_DISPATCH( bingo, (login)(logout)(entergame)(genball)(declearwin)(erase))

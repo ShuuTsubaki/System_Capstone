@@ -119,10 +119,6 @@
                 {
                     "name": "iteration",
                     "type": "int8"
-                },
-                {
-                    "name": "block_seed",
-                    "type": "checksum256"
                 }
             ]
         },
