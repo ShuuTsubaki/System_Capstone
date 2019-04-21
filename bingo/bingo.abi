@@ -3,7 +3,7 @@
     "version": "eosio::abi/1.1",
     "structs": [
         {
-            "name": "declearwin",
+            "name": "declarewin",
             "base": "",
             "fields": [
                 {
@@ -144,8 +144,8 @@
     "types": [],
     "actions": [
         {
-            "name": "declearwin",
-            "type": "declearwin",
+            "name": "declarewin",
+            "type": "declarewin",
             "ricardian_contract": ""
         },
         {
