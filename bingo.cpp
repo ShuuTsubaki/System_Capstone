@@ -386,7 +386,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                                     k = k % (GAME_SIZE * GAME_SIZE);
                                 }
                                 player.balls[GAME_SIZE + i - 1] = t[k];
-                                eosio_assert(i == player.iteration, "We have sanity problem?");
+                                eosio_assert(i + 1 == player.iteration, "We have sanity problem?");
                             }
                             delete [] t;
                             player.iteration = player.iteration + 1;
