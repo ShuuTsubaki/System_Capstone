@@ -373,7 +373,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                                     else
                                         break;
                                 uint32_t j = h.hash[i * 4] << 24 | h.hash[i * 4 + 1] << 16 | h.hash[i * 4 + 2] << 8 | h.hash[i * 4 + 3];
-                                j = j % (GAME_SIZE * GAME_SIZE - player.iteration - 1);
+                                j = j % (GAME_SIZE * GAME_SIZE - i - 1);
                                 while (1)
                                 {
                                     if (t[k] >= 0)
@@ -386,7 +386,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                                     k = k % (GAME_SIZE * GAME_SIZE);
                                 }
                                 player.balls[GAME_SIZE + i - 1] = t[k];
-                                eosio_assert(i + 1 == player.iteration, "We have sanity problem?");
+                                eosio_assert(i == player.iteration, "We have sanity problem?");
                             }
                             delete [] t;
                             player.iteration = player.iteration + 1;
