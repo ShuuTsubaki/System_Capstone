@@ -14,7 +14,8 @@ Defult wallet key:
 	private: PW5JmPeFwMaWkR8YUU6rBvrXBEZmjtyiXvRz1ngzcTqZhDFv5GG3p
 	public: EOS7VJJ7s8MEbuzvcS3VURcexvnXp5ADG9SvGMCxuPwdiyyPkjFWW
 	
-	
+	ex: 
+		cleos wallet unlock --password PW5JmPeFwMaWkR8YUU6rBvrXBEZmjtyiXvRz1ngzcTqZhDFv5GG3p
 	
 	
 Create account:
@@ -85,7 +86,7 @@ $Seed = 玩家输入的 seed
 cleos push action bingo genball '["$User_Name"]' -p $User_Name@active
 
 Declearwin：
-cleos push action bingo declearwin '["$User_Name"]' -p $User_Name@active
+cleos push action bingo declarewin '["$User_Name"]' -p $User_Name@active
 
 
 Logout:
