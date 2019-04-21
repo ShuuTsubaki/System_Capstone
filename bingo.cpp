@@ -330,7 +330,6 @@ class [[eosio::contract]] bingo : public eosio::contract
                     {
                         if (s_flag) //first 5 generation
                         {
-                            player.iteration = player.iteration + 1;
                             capi_checksum256 h;
                             int8_t* t = new int8_t[GAME_SIZE * GAME_SIZE];
                             int i;
@@ -373,9 +372,8 @@ class [[eosio::contract]] bingo : public eosio::contract
                                         t[player.balls[GAME_SIZE + i]] = -1;
                                     else
                                         break;
-                                i = player.iteration - 1;
                                 uint32_t j = h.hash[i * 4] << 24 | h.hash[i * 4 + 1] << 16 | h.hash[i * 4 + 2] << 8 | h.hash[i * 4 + 3];
-                                j = j % (GAME_SIZE * GAME_SIZE - i - 1);
+                                j = j % (GAME_SIZE * GAME_SIZE - player.iteration - 1);
                                 while (1)
                                 {
                                     if (t[k] >= 0)
@@ -391,6 +389,7 @@ class [[eosio::contract]] bingo : public eosio::contract
                                 eosio_assert(i + 1 == player.iteration, "We have sanity problem?");
                             }
                             delete [] t;
+                            player.iteration = player.iteration + 1;
                         }
                     }
                     else    //Someone won, current user lost
