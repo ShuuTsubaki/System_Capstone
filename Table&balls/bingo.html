@@ -16,20 +16,34 @@
 	<!-- <div class="circle" style="z-index: 10;"><div id="mb"></div></div> -->
 	<audio autoplay ><source src="http://www.mikefromchurch.com/ringtones/RINGTONES-wav/Treo%20-Arabesque.wav" type="audio/wav"></audio>
 		<script>
+				// var prevColor = $(this).css("background-color");
 				$(document).ready(function(){
-				  $(".balls").click(function(){
-					var color = getRandomColor();
-					if ($("td").css("color") != color) {
-						$(this).css("background-color", color);
-						console.log(this.id)
+				  $(".balls").on("click", function(){
+					var color = `rgb(${0}, ${255}, ${0})`;
+					if ($(this).data('color') == 'green') {
+						// ($(this).css("background-color", `rgb(${48}, ${125}, ${226})`))
+						$(this).data('color', 'blue');
 					} else {
-						$(this).css("background-color", getRandomColor());
-					}  
+						// ($(this).css("background-color", `rgb(${0}, ${255}, ${0})`))
+						$(this).data('color', 'green');
+					}
 				  });
 				});
-				function getRandomColor() {
-    				return `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
-  				}
+				$(document).ready(function(){
+					$( ".balls" ).hover(
+					  function() {
+					    ($(this).css("background-color", `rgb(${222}, ${247}, ${6})`))
+					  }, function() {
+					    if ($(this).data('color') == 'green') {
+							($(this).css("background-color", `rgb(${0}, ${255}, ${0})`))
+						} 
+						else {
+							($(this).css("background-color", `rgb(${48}, ${125}, ${226})`))
+						
+						}
+					  }
+					);
+				});
 		</script>
 	<table border="10" class="table1">
 		<tr>

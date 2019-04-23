@@ -13,14 +13,14 @@
 	height: 170px;
 }
 .freeball {
-  background: green;
+  background: rgb(100, 255, 100);
   border-radius: 100%;
-  box-shadow: inset 0 0 130px yellow;
+  box-shadow: inset 0 0 130px white;
   width: 150px;
   height: 150px;
 }
 .freeball:hover{  
-	background: orange;
+	background: yellow;
 	border-radius: 100%;
 	box-shadow: inset 0 0 100px white;
 	width: 170px;
