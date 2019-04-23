@@ -1,6 +1,7 @@
 - [Code organization](#code-organization)
 - [Contract Command Examples](#contract-command-examples)
 - [Set Up Instruction](#set-up-instruction)
+
 This repo consists a simple blockchain-based application that allows user to play an online provably fair bingo.
 
 > Guohui Li, Fangzheng Zhang, Yuqing Liu, Hongwei Lou, Zeke Lin 
