@@ -1,9 +1,9 @@
 - [Code organization](#code-organization)
-- [Command examples](#command-examples)
-
+- [Contract Command Examples](#contract-command-examples)
+- [Set Up Instruction](#set-up-instruction)
 This repo consists a simple blockchain-based application that allows user to play an online provably fair bingo.
 
-> Guohui Li, Fangzheng Zhang, Yuqing Liu 
+> Guohui Li, Fangzheng Zhang, Yuqing Liu, Hongwei Lou, Zeke Lin 
 
 The original code for the paper belongs to Google, and there seems to be no need to go through all the legal processes to open source them as the experiments are rather straightforward to implement and reproduce.
 
@@ -70,4 +70,4 @@ Get Table:
 cleos get table bingo bingo players
 ```
 
-# Compilated Instruction
+# Set Up Instruction
