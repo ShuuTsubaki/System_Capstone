@@ -11,11 +11,13 @@ The original code for the paper belongs to Google, and there seems to be no need
 However, since people have been asking for the code. In order for people to easily get started, I created this repo to demonstrate how one can take an existing implementation of commonly used successful models (here we use [an implementation of Wide Resnets in pytorch](https://github.com/xternalz/WideResNet-pytorch)) and fit them to random labels. We are not trying to reproduce exactly the same experiments (e.g. with Inception and Alexnet and corresponding hyper parameters) in the paper. This repo is completely written from scratch, and has no association with Google.
 
 If you are trying to play the game, you can access this following link:
-
+```
+http://35.199.5.180/
+```
 >
 
-- Sign up account via the website UI.
-- Login the game and wait for another player.
+- Login the game with EOSIO account.
+- Input the see and wait for another player.
 - Enter the game and the game will automatically started.
 - It will assign a 5x5 grid with numbers, and generate first balls for matching.
 - It will generate 1 ball every turn in following five turns.
