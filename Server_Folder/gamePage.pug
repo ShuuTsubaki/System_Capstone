@@ -12,6 +12,9 @@ html
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
   script.
     $(document).ready(function(){
+    setTimeout(function() { $('#gen').submit(); }, 5000);
+	
+	
     $(".balls").on("click", function(){
     var color = `rgb(${0}, ${255}, ${0})`;
     if ($(this).data('color') == 'green') {
@@ -161,7 +164,7 @@ html
             td
               .balls2
                 #num10(style='position: relative; top: 30%', align='center') #{balls[9]}
-      form(action='http://35.199.5.180/genball' method='POST' style='position: fixed; bottom:50px; right:50px')
+      form(action='http://35.199.5.180/genball' method='POST' id='gen' style='position: fixed; bottom:50px; right:50px; display:none')
         input(type='submit' value='Get Next Ball!')
       form(action='http://35.199.5.180/declareWin' method='POST' style='position: fixed; bottom:30px; right:50px')
         input(type='submit' value='Bingo!!')
@@ -172,5 +175,5 @@ html
         if prev == 1
           p(style='font-size: 50px; color: GREEN;') You Won!
         form(action='http://35.199.5.180/logingame' method='POST')
-          input(type='text' name='seed' placeholder='Enter Your Seed1')
+          input(type='text' name='seed' placeholder='Enter Your Lucky String')
           input(type='submit' value='Start New Game')

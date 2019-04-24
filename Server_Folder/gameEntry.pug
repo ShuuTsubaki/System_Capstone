@@ -34,3 +34,6 @@ script(src='login.js')
 		p Entered Seed: #{seed1}
 		form(action='http://35.199.5.180/entergame' method='POST')
 			input(type='submit' value='Join 2-Player Game!')
+if notReady
+	script.
+		alert('Another player is not ready yet... Try again later!')

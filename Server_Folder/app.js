@@ -69,10 +69,10 @@ apirouter.post('/logout', (req, res) => {
 	}));
 });
 
-apirouter.post('/', (req, res) => {
-	var login = true
-	if (req.session.uid==""){
-		login = false
+apirouter.get('/', (req, res) => {
+	var login = true;
+	if (!req.session.uid || 0 === req.session.uid.length){
+		login = false;
 	}
 	res.end(pug_index({
 		uid: req.session.uid,
@@ -107,16 +107,17 @@ apirouter.post('/logingame', (req, res) => {
 		  if (e instanceof RpcError)
 			console.log(JSON.stringify(e.json, null, 2));
 		}
-	})();
 	getUserByName(`${req.session.uid}`).then(val => {
 		res.end(pug_gameEntry({
 			uid: req.session.uid,
 			logined: true,
 			win: val.win_count,
 			lost: val.lost_count,
-			seed1: val.seed
+			seed1: val.seed,
+			notReady: false
 		}));
 	});
+	})();
 	//console.log(playerInfo)
 });
 
@@ -164,22 +165,36 @@ apirouter.post('/declareWin', (req, res) => {
 });
 
 apirouter.post('/entergame', (req, res) => {
-	entergame(req.session.uid, req.session.seed)
-	getUserBoard(`${req.session.uid}`).then(val => {
-		var balls = [];
-		var index = 0;
-		while(val.balls[index] != -1 && index < 10) {
-			balls[index] = val.balls[index];
-			index++;
+	(async () => {
+	var Ready = await entergame(req.session.uid, req.session.seed);
+	console.log(Ready);
+	getUserByName(`${req.session.uid}`).then(val => {
+		if (Ready == 1) {
+			var balls = [];
+			var index = 0;
+			while(val.balls[index] != -1 && index < 10) {
+				balls[index] = val.balls[index];
+				index++;
+			}
+			res.end(pug_gamePage({
+				prev: val.prev_game,
+				ingame: val.in_game,
+				board: val.board,
+				balls: balls
+			}));
 		}
-		res.end(pug_gamePage({
-			prev: val.prev_game,
-			ingame: 1,
-			board: val.board,
-			balls: balls
+		else {
+			res.end(pug_gameEntry({
+			uid: req.session.uid,
+			logined: true,
+			win: val.win_count,
+			lost: val.lost_count,
+			seed1: val.seed,
+			notReady: true
 		}));
-		
+		}
 	});
+	})();
 });
 
 apirouter.post('/genball', (req, res) => {
@@ -208,22 +223,22 @@ apirouter.post('/genball', (req, res) => {
 		  if (e instanceof RpcError)
 			console.log(JSON.stringify(e.json, null, 2));
 		}	
+		getUserBoard(`${req.session.uid}`).then(val => {
+			var balls = [];
+			var index = 0;
+			while(val.balls[index] != -1 && index < 10) {
+				balls[index] = val.balls[index];
+				index++;
+			}
+			res.end(pug_gamePage({
+				prev: val.prev_game,
+				ingame: val.in_game,
+				board: val.board,
+				balls: balls
+			}));
+			
+		});
 	})();
-	getUserBoard(`${req.session.uid}`).then(val => {
-		var balls = [];
-		var index = 0;
-		while(val.balls[index] != -1 && index < 10) {
-			balls[index] = val.balls[index];
-			index++;
-		}
-		res.end(pug_gamePage({
-			prev: val.prev_game,
-			ingame: val.in_game,
-			board: val.board,
-			balls: balls
-		}));
-		
-	});
 });
 
 async function entergame(uid, seed) {
@@ -246,14 +261,10 @@ async function entergame(uid, seed) {
 		expireSeconds: 30,
 	  });
 	  console.dir(result);
+	  return 1;
 	} catch (e) {
-		if (e != "Error: assertion failure with message: Player already in game!") {
-			console.log('\nCaught exception: ' + e);
-			if (e instanceof RpcError)
-				console.log(JSON.stringify(e.json, null, 2));
-			await sleep(1000);
-			entergame(uid, seed);
-		}
+		console.log('\nCaught exception: ' + e);
+		return 2;
 	}	
 }
 

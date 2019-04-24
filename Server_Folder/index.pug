@@ -13,12 +13,6 @@ script(src='login.js')
 	.w3-bar.w3-black.w3-card
 		h1 Quint-Blockchain
 		a.w3-bar-item.w3-button.w3-padding-large(href='http://35.199.5.180') HOME
-		.w3-dropdown-hover.w3-hide-small
-			button.w3-padding-large.w3-button(title='More')
-				| GAMES 
-				i.fa.fa-caret-down
-			.w3-dropdown-content.w3-bar-block.w3-card-4
-				a.w3-bar-item.w3-button(href='http://35.199.5.180/capstone/bingo.html') Bingo
 		if !logined
 			form.w3-padding-large.w3-hide-small.w3-right(action='http://35.199.5.180/login' method='POST')
 				input(type='text' name='uid')
@@ -29,6 +23,9 @@ script(src='login.js')
 				input(type='submit' value='Login Out')
 .w3-content(style='max-width:2000px;margin-top:200px')
 	if logined
+		p Welcome to blockchain bingo game! This game requires 2 players to play the game. In this bingo game each player will have a board containing 24 numbers and a free ball in the middle(free ball can be any number). Bingo balls will be generated automatically every 5 seconds. If you think you have bingo, click the Bingo button at the right-bottom corner to win the game. The first player to get bingo will the game. If you click bingo button without actually having bingo, you will also lose the game. So be careful and have fun!
 		form(action='http://35.199.5.180/logingame' method='POST')
-			input(type='text' name='seed' placeholder='Enter Your Seed1')
+			input(type='text' name='seed' placeholder='Enter Your Lucky String')
 			input(type='submit' value='Login in to Bingo Game')
+	else
+		p Please login first to play the game.
