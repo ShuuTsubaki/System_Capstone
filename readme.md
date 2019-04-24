@@ -26,7 +26,7 @@ If you are trying to play the game, you can access this following link:
 - `bingo`: the folder the contains bingo.cpp, bingo.wasm, and bingo.abi.
 - `Table&balls`: the folder that contains the front-end portion and the networking and communication between front-end and back-end.
 - `Google_Cloud_EOS_CMD`: the folder that contains the user instructon for testing the smart contract function in the terminal of the server, includes the test script and command instruction.
-- 
+- `Server_Folder`: the folder contains all the server files. All the files in this folder are ready to run. (the commands to start this server are in "Set Up Instruction" part.)
 
 ## File inside the bingo folder
 
