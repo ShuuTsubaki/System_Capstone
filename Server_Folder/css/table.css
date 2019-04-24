@@ -1,0 +1,20 @@
+td {
+  color: rgb(255, 0, 0);
+  font-size: 50px;
+}
+.table1 {
+  margin: 10;
+  position: absolute;
+  top: 65%;
+  left: 30%;
+  width: 30%;
+  transform: translate(-50%, -50%);
+}
+.table2 {
+  margin: 5;
+  position: absolute;
+  top: 65%;
+  left: 75%;
+  width: 20%;
+  transform: translate(-50%, -50%);
+}

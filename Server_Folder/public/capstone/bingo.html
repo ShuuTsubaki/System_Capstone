@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bingo Game!!!</title>
+	<!-- <meta http-equiv="refresh" content="2" > -->
+	<link rel="stylesheet" type="text/css" href="css/table.css" />
+	<link rel="stylesheet" type="text/css" href="css/ballsOnTable.css" />
+	<link rel="stylesheet" type="text/css" href="css/movingBall.css" />
+</head>
+<script type="text/javascript" src="js/bingo.js"></script>
+<script type="text/javascript" src="js/getBall.js"></script>
+
+<body onload="numberGenerator();getNum(15);" background="background.jpg">
+	<!-- <div class="circle" style="z-index: 10;"><div id="mb"></div></div> -->
+	<audio autoplay ><source src="http://www.mikefromchurch.com/ringtones/RINGTONES-wav/Treo%20-Arabesque.wav" type="audio/wav"></audio>
+	<table border="10" class="table1">
+		<tr>
+			<td>
+				<div class="balls">
+					<div id="square0"></div>
+					<span class="eight"></span>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square1"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square2"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square3"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square4"></div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="balls">
+					<div id="square5"></div>
+					<span class="eight"></span>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square6"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square7"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square8"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square9"></div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="balls">
+					<div id="square10"></div>
+					<span class="eight"></span>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square11"></div>
+				</div>
+			</td>
+			<td>
+				<div class="freeball" >
+					<div id="square12"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square13" ></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square14" ></div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="balls">
+					<div id="square15" ></div>
+					<span class="eight"></span>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square16" ></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square17" ></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square18"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square19"></div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="balls">
+					<div id="square20"></div>
+					<span class="eight"></span>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square21"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square22"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square23"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls" >
+					<div id="square24"></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<table border="10" class="table2" >
+		<tr>
+			<td>
+				<div class="balls2">
+					<div id="num1"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num2"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num3"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num4"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num5"></div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="balls2">
+					<div id="num6"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num7"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num8"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num9"></div>
+				</div>
+			</td>
+			<td>
+				<div class="balls2">
+					<div id="num10"></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

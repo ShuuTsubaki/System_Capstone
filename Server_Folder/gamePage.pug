@@ -1,0 +1,176 @@
+doctype html
+html
+  head
+    title Bingo Game!!!
+    style
+      include css/table.css
+      include css/ballsOnTable.css
+      include css/movingBall.css
+  script(type='text/javascript' src='js/bingo.js')
+  script(type='text/javascript' src='js/getBall.js')
+  script(type='text/javascript' src='js/click.js')
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+  script.
+    $(document).ready(function(){
+    $(".balls").on("click", function(){
+    var color = `rgb(${0}, ${255}, ${0})`;
+    if ($(this).data('color') == 'green') {
+    $(this).data('color', 'blue');
+    } else {
+    $(this).data('color', 'green');
+    }
+    });
+    });
+    $(document).ready(function(){
+    $( ".balls" ).hover(
+    function() {
+    ($(this).css("background-color", `rgb(${222}, ${247}, ${6})`))
+    }, function() {
+    if ($(this).data('color') == 'green') {
+    ($(this).css("background-color", `rgb(${0}, ${255}, ${0})`))
+    }
+    else {
+    ($(this).css("background-color", `rgb(${48}, ${125}, ${226})`))
+    }
+    }
+    );
+    });
+  body
+    if ingame 
+      audio(autoplay='')
+        source(src='http://www.mikefromchurch.com/ringtones/RINGTONES-wav/Treo%20-Arabesque.wav', type='audio/wav')
+      table.table1(border='10')
+          tr
+            td
+              .balls
+                #square0(style='position: relative; top: 30%', align='center') #{board[0]}
+                span.eight
+            td
+              .balls
+                #square1(style='position: relative; top: 30%', align='center') #{board[1]}
+            td
+              .balls
+                #square2(style='position: relative; top: 30%', align='center') #{board[2]}
+            td
+              .balls
+                #square3(style='position: relative; top: 30%', align='center') #{board[3]}
+            td
+              .balls
+                #square4(style='position: relative; top: 30%', align='center') #{board[4]}
+          tr
+            td
+              .balls
+                #square5(style='position: relative; top: 30%', align='center') #{board[5]}
+                span.eight
+            td
+              .balls
+                #square6(style='position: relative; top: 30%', align='center') #{board[6]}
+            td
+              .balls
+                #square7(style='position: relative; top: 30%', align='center') #{board[7]}
+            td
+              .balls
+                #square8(style='position: relative; top: 30%', align='center') #{board[8]}
+            td
+              .balls
+                #square9(style='position: relative; top: 30%', align='center') #{board[9]}
+          tr
+            td
+              .balls
+                #square10(style='position: relative; top: 30%', align='center') #{board[10]}
+                span.eight
+            td
+              .balls
+                #square11(style='position: relative; top: 30%', align='center') #{board[11]}
+            td
+              .freeball
+                #square12(style='position: relative; top: 30%', align='center')
+            td
+              .balls
+                #square13(style='position: relative; top: 30%', align='center') #{board[13]}
+            td
+              .balls
+                #square14(style='position: relative; top: 30%', align='center') #{board[14]}
+          tr
+            td
+              .balls
+                #square15(style='position: relative; top: 30%', align='center') #{board[15]}
+                span.eight
+            td
+              .balls
+                #square16(style='position: relative; top: 30%', align='center') #{board[16]}
+            td
+              .balls
+                #square17(style='position: relative; top: 30%', align='center') #{board[17]}
+            td
+              .balls
+                #square18(style='position: relative; top: 30%', align='center') #{board[18]}
+            td
+              .balls
+                #square19(style='position: relative; top: 30%', align='center') #{board[19]}
+          tr
+            td
+              .balls
+                #square20(style='position: relative; top: 30%', align='center') #{board[20]}
+                span.eight
+            td
+              .balls
+                #square21(style='position: relative; top: 30%', align='center') #{board[21]}
+            td
+              .balls
+                #square22(style='position: relative; top: 30%', align='center') #{board[22]}
+            td
+              .balls
+                #square23(style='position: relative; top: 30%', align='center') #{board[23]}
+            td
+              .balls
+                #square24(style='position: relative; top: 30%', align='center') #{board[24]}
+      table.table2(border='10')
+          tr
+            td
+              .balls2
+                #num1(style='position: relative; top: 30%', align='center') #{balls[0]}
+            td
+              .balls2
+                #num2(style='position: relative; top: 30%', align='center') #{balls[5]}
+          tr  
+            td
+              .balls2
+                #num3(style='position: relative; top: 30%', align='center') #{balls[1]}
+            td
+              .balls2
+                #num4(style='position: relative; top: 30%', align='center') #{balls[6]}
+          tr  
+            td
+              .balls2
+                #num5(style='position: relative; top: 30%', align='center') #{balls[2]}
+            td
+              .balls2
+                #num6(style='position: relative; top: 30%', align='center') #{balls[7]}
+          tr  
+            td
+              .balls2
+                #num7(style='position: relative; top: 30%', align='center') #{balls[3]}
+            td
+              .balls2
+                #num8(style='position: relative; top: 30%', align='center') #{balls[8]}
+          tr  
+            td
+              .balls2
+                #num9(style='position: relative; top: 30%', align='center') #{balls[4]}
+            td
+              .balls2
+                #num10(style='position: relative; top: 30%', align='center') #{balls[9]}
+      form(action='http://35.199.5.180/genball' method='POST' style='position: fixed; bottom:50px; right:50px')
+        input(type='submit' value='Get Next Ball!')
+      form(action='http://35.199.5.180/declareWin' method='POST' style='position: fixed; bottom:30px; right:50px')
+        input(type='submit' value='Bingo!!')
+    else
+      div(style='text-align: center;')
+        if prev == 0
+          p(style='font-size: 50px; color: RED;') You Lost!
+        if prev == 1
+          p(style='font-size: 50px; color: GREEN;') You Won!
+        form(action='http://35.199.5.180/logingame' method='POST')
+          input(type='text' name='seed' placeholder='Enter Your Seed1')
+          input(type='submit' value='Start New Game')

@@ -1,0 +1,42 @@
+.balls{  
+	background: rgb(48, 125, 226);
+	border-radius: 100%;
+	box-shadow: inset 0 0 100px white;
+	width: 150px;
+	height: 150px;
+}
+.balls:hover{  
+	background: rgb(222, 247, 6);
+	border-radius: 100%;
+	box-shadow: inset 0 0 100px rgb(255, 255, 255);
+	width: 170px;
+	height: 170px;
+}
+.freeball {
+  background: rgb(100, 255, 100);
+  border-radius: 100%;
+  box-shadow: inset 0 0 130px white;
+  width: 150px;
+  height: 150px;
+}
+.freeball:hover{  
+	background: yellow;
+	border-radius: 100%;
+	box-shadow: inset 0 0 100px white;
+	width: 170px;
+	height: 170px;
+}
+.balls2{  
+	background: #ff40ff;
+	border-radius: 100%;
+	box-shadow: inset 0 0 80px aliceblue;
+	width: 150px;
+	height: 150px;
+}
+.balls2:hover{  
+	background: rgb(255, 0, 234);
+	border-radius: 100%;
+	box-shadow: inset 0 0 100px white;
+	width: 170px;
+	height: 170px;
+}

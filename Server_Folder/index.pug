@@ -1,0 +1,34 @@
+doctype html
+title Quint-Blockchain
+meta(charset='UTF-8')
+meta(name='viewport' content='width=device-width, initial-scale=1')
+link(rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css')
+link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato')
+link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+style.
+	body {font-family: "Lato", sans-serif}
+	.mySlides {display: none}
+script(src='login.js')
+.w3-top
+	.w3-bar.w3-black.w3-card
+		h1 Quint-Blockchain
+		a.w3-bar-item.w3-button.w3-padding-large(href='http://35.199.5.180') HOME
+		.w3-dropdown-hover.w3-hide-small
+			button.w3-padding-large.w3-button(title='More')
+				| GAMES 
+				i.fa.fa-caret-down
+			.w3-dropdown-content.w3-bar-block.w3-card-4
+				a.w3-bar-item.w3-button(href='http://35.199.5.180/capstone/bingo.html') Bingo
+		if !logined
+			form.w3-padding-large.w3-hide-small.w3-right(action='http://35.199.5.180/login' method='POST')
+				input(type='text' name='uid')
+				input(type='submit' value='Login')
+		else
+			form.w3-padding-large.w3-hide-small.w3-right(action='http://35.199.5.180/logout' method='POST')
+				p #{uid}
+				input(type='submit' value='Login Out')
+.w3-content(style='max-width:2000px;margin-top:200px')
+	if logined
+		form(action='http://35.199.5.180/logingame' method='POST')
+			input(type='text' name='seed' placeholder='Enter Your Seed1')
+			input(type='submit' value='Login in to Bingo Game')
