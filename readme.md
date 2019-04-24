@@ -73,7 +73,9 @@ cleos get table bingo bingo players
 
 # Set Up Instruction
 `Before You Start`: 
-- make sure you download the Server_Folder, and make sure you are in it. 
+- It may not work correctly in your own computer, you need change our server address to your own address
+- Make sure you download nodejs and npm
+- Make sure you download the Server_Folder, and make sure you are in it. 
 
 Setup:
 ```
@@ -84,4 +86,4 @@ Start Server:
 sudo PORT=80 npm start
 ```
 
-You are ready to go! You can connect to the server to play the game.
+You are ready to go! You can connect to your localhost to play the game.
