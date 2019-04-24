@@ -72,3 +72,15 @@ cleos get table bingo bingo players
 ```
 
 # Set Up Instruction
+`Before You Start`: make sure you download the Server_Folder, and make sure you are in it. 
+
+Setup:
+```
+npm install
+```
+Start Server:
+```
+sudo PORT=80 npm start
+```
+
+You are ready to go! You can connect to the server to play the game.
