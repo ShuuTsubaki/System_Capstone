@@ -72,7 +72,8 @@ cleos get table bingo bingo players
 ```
 
 # Set Up Instruction
-`Before You Start`: make sure you download the Server_Folder, and make sure you are in it. 
+`Before You Start`: 
+- make sure you download the Server_Folder, and make sure you are in it. 
 
 Setup:
 ```
